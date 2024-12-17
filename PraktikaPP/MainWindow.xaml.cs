@@ -1,4 +1,4 @@
-﻿using PraktikaPP.ViewModel;
+﻿using PraktikaPP.Pages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,18 +26,28 @@ namespace PraktikaPP
             InitializeComponent();
         }
 
-        private void OpenSecondWindow_Click(object sender, RoutedEventArgs e)
+        private void Categories_Click(object sender, RoutedEventArgs e)
         {
-            // Создаем экземпляр второго окна
-            var secondWindow = new ProductViewModel();
 
-            // Открываем второе окно
-            secondWindow.Show();
+           MainFrame.Navigate(new CategoriesPage());
 
-            // Закрываем текущее окно (если нужно)
-            this.Close();
+        }
+        private void Products_Click(object sender, RoutedEventArgs e)
+        {
+
+            MainFrame.Navigate(new ProductsPage());
+
+        }
+        private void Order_Click(object sender, RoutedEventArgs e)
+        {
+
+            MainFrame.Navigate(new OrdersPage());
+
+        }
+
+        private void Report_Click(object sender, RoutedEventArgs e)
+        {
+           // MainFrame.Navigate(new ReportPage());
         }
     }
-
-}
 }

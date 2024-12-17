@@ -67,8 +67,23 @@
     <Compile Include="categ.cs">
       <DependentUpon>PraktikaDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="DopPages\CategoryEditPage.xaml.cs">
+      <DependentUpon>CategoryEditPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\CategoriesPage.xaml.cs">
+      <DependentUpon>CategoriesPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DopPages\ProductEditPage.xaml.cs">
+      <DependentUpon>ProductEditPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="order.cs">
       <DependentUpon>PraktikaDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\OrdersPage.xaml.cs">
+      <DependentUpon>OrdersPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ProductsPage.xaml.cs">
+      <DependentUpon>ProductsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="PraktikaDB.cs">
       <AutoGen>True</AutoGen>
@@ -87,6 +102,18 @@
     <Compile Include="users.cs">
       <DependentUpon>PraktikaDB.tt</DependentUpon>
     </Compile>
+    <Page Include="DopPages\CategoryEditPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\CategoriesPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DopPages\ProductEditPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -99,6 +126,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Pages\OrdersPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\ProductsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PraktikaDB.Context.cs">

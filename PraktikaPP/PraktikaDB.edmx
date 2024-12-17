@@ -161,7 +161,6 @@
           <NavigationProperty Name="prodact" Relationship="Self.FK_order_prodact" FromRole="order" ToRole="prodact" />
           <NavigationProperty Name="user2" Relationship="Self.FK_order_user2" FromRole="order" ToRole="user2" />
           <NavigationProperty Name="users" Relationship="Self.FK_order_users" FromRole="order" ToRole="users" />
-          <Property Name="date" Type="DateTime" Nullable="false" />
         </EntityType>
         <EntityType Name="prodact">
           <Key>

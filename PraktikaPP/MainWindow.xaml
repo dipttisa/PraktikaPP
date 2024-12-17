@@ -5,12 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PraktikaPP"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-
-        <Button Content="Перейти на второе окно" 
-                HorizontalAlignment="Center" VerticalAlignment="Center"
-                Click="OpenSecondWindow_Click" />
-
-    </Grid>
+       Title="Главное меню" Height="450" Width="900" Background="LavenderBlush">
+    <DockPanel>
+        <!-- Верхнее меню -->
+        <Menu Background="Lavender" DockPanel.Dock="Top">
+            <MenuItem Header="Категории" Click="Categories_Click"/>
+            <MenuItem Header="Продукция" Click="Products_Click"/>
+                <MenuItem Header="Платежи" Click="Order_Click"/>
+                <MenuItem Header="Отчет" Click="Report_Click"/>
+        </Menu>
+        <!-- Основное содержимое -->
+        <Frame Name="MainFrame" NavigationUIVisibility="Hidden" />
+    </DockPanel>
 </Window>

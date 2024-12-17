@@ -18,8 +18,6 @@ namespace PraktikaPP
         public PractikaDB()
             : base("name=PractikaDB")
         {
-
-
         }
         private static PractikaDB _context;
 

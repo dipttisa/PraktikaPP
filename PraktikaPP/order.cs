@@ -20,8 +20,8 @@ namespace PraktikaPP
         public string price { get; set; }
         public string count { get; set; }
         public string sum { get; set; }
-        public System.DateTime date { get; set; }
-    
+        public DateTime date { get; set; }
+
         public virtual prodact prodact { get; set; }
         public virtual user2 user2 { get; set; }
         public virtual users users { get; set; }

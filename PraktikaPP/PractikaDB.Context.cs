@@ -12,7 +12,9 @@ namespace PraktikaPP
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
-    
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
+
     public partial class PractikaDB : DbContext
     {
         public PractikaDB()
@@ -32,12 +34,13 @@ namespace PraktikaPP
         {
             throw new UnintentionalCodeFirstException();
         }
-    
+
         public virtual DbSet<categ> categ { get; set; }
         public virtual DbSet<order> order { get; set; }
         public virtual DbSet<prodact> prodact { get; set; }
         public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
         public virtual DbSet<user2> user2 { get; set; }
         public virtual DbSet<users> users { get; set; }
+
     }
 }

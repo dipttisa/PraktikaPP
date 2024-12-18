@@ -1,0 +1,33 @@
+﻿<Page x:Class="PraktikaPP.DopPages.OrderEditPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:PraktikaPP.DopPages"
+      mc:Ignorable="d" 
+      d:DesignHeight="300" d:DesignWidth="400"
+          Title="Добавить новый платеж"  Background="Lavender">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="22*"/>
+            <RowDefinition Height="53*"/>
+        </Grid.RowDefinitions>
+        <ComboBox x:Name="CategoryComboBox"  VerticalAlignment="Top" Height="25" DisplayMemberPath="category_name" SelectedValuePath="id" Margin="140,29,10,0" />
+        <ComboBox x:Name="ProductComboBox" Width="250"  VerticalAlignment="Top" Height="25" DisplayMemberPath="name_prod" SelectedValuePath="id_cat" HorizontalAlignment="Left" Margin="140,77,0,0" Grid.RowSpan="2" />
+
+
+        <Button Content="Сохранить" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="30" Margin="150,150,0,0" Click="SaveProduct_Click" Grid.Row="1"/>
+        <Label Content="Название продукта" HorizontalAlignment="Left" Margin="10,75,0,0" VerticalAlignment="Top" Grid.RowSpan="2"/>
+        <Label Content="Количество" HorizontalAlignment="Left" Margin="31,39,0,0" VerticalAlignment="Top" Grid.Row="1"/>
+        <Label Content="Цена" HorizontalAlignment="Left" Margin="49,75,0,0" VerticalAlignment="Top" Grid.Row="1"/>
+        <Label Content="Стоимость" HorizontalAlignment="Left" Margin="34,105,0,0" VerticalAlignment="Top" Grid.Row="1"/>
+        <Label Content="р." HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="260,70,0,0" Grid.Row="1"/>
+        <Label Content="р." HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="260,106,0,0" Grid.Row="1"/>
+        <Label Content="Категория" HorizontalAlignment="Left" Margin="35,27,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="KolvotNameTextBox" HorizontalAlignment="Left" TextAlignment="Center" TextChanged="KolvotNameTextBox_TextChanged" Margin="140,39,0,0" Height="25" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120" Grid.Row="1"/>
+        <TextBox x:Name="SumNameTextBox" HorizontalAlignment="Center" TextAlignment="Center" IsReadOnly="True" Margin="0,106,0,0" Height="25" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="120" Grid.Row="1"/>
+        <TextBox x:Name="PriceTextBox" Width="120" Height="25" Margin="0,75,0,0" Text="Введите цену" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+
+    </Grid>
+
+</Page>

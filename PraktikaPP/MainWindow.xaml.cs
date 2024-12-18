@@ -21,9 +21,14 @@ namespace PraktikaPP
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        private int _userId;
+
+        // Конструктор с параметром
+        public MainWindow(int userId)
         {
             InitializeComponent();
+            _userId = userId;
+            
         }
 
         private void Categories_Click(object sender, RoutedEventArgs e)
@@ -41,13 +46,13 @@ namespace PraktikaPP
         private void Order_Click(object sender, RoutedEventArgs e)
         {
 
-            MainFrame.Navigate(new OrdersPage());
+            MainFrame.Navigate(new OrdersPage(_userId));
 
         }
 
         private void Report_Click(object sender, RoutedEventArgs e)
         {
-           // MainFrame.Navigate(new ReportPage());
+             MainFrame.Navigate(new ReportPage(_userId));
         }
     }
 }

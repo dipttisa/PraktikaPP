@@ -17,13 +17,12 @@ namespace PraktikaPP
         public int id { get; set; }
         public int product_id { get; set; }
         public int user_id { get; set; }
-        public string price { get; set; }
-        public string count { get; set; }
-        public string sum { get; set; }
+        public decimal price { get; set; }
+        public Nullable<int> count { get; set; }
+        public Nullable<decimal> sum { get; set; }
         public DateTime date { get; set; }
-
+    
         public virtual prodact prodact { get; set; }
-        public virtual user2 user2 { get; set; }
         public virtual users users { get; set; }
     }
 }

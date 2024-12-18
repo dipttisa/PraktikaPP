@@ -65,10 +65,19 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="categ.cs">
-      <DependentUpon>PraktikaDB.tt</DependentUpon>
+      <DependentUpon>PractikaDB.tt</DependentUpon>
     </Compile>
     <Compile Include="DopPages\CategoryEditPage.xaml.cs">
       <DependentUpon>CategoryEditPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DopPages\OrderEditPage.xaml.cs">
+      <DependentUpon>OrderEditPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LogInWindow.xaml.cs">
+      <DependentUpon>LogInWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="order.cs">
+      <DependentUpon>PractikaDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Pages\CategoriesPage.xaml.cs">
       <DependentUpon>CategoriesPage.xaml</DependentUpon>
@@ -76,33 +85,47 @@
     <Compile Include="DopPages\ProductEditPage.xaml.cs">
       <DependentUpon>ProductEditPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="order.cs">
-      <DependentUpon>PraktikaDB.tt</DependentUpon>
-    </Compile>
     <Compile Include="Pages\OrdersPage.xaml.cs">
       <DependentUpon>OrdersPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\ProductsPage.xaml.cs">
       <DependentUpon>ProductsPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PraktikaDB.cs">
+    <Compile Include="Pages\ReportPage.xaml.cs">
+      <DependentUpon>ReportPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PractikaDB.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>PraktikaDB.tt</DependentUpon>
+      <DependentUpon>PractikaDB.tt</DependentUpon>
     </Compile>
     <Compile Include="prodact.cs">
-      <DependentUpon>PraktikaDB.tt</DependentUpon>
+      <DependentUpon>PractikaDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_helpdiagramdefinition_Result.cs">
+      <DependentUpon>PractikaDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_helpdiagrams_Result.cs">
+      <DependentUpon>PractikaDB.tt</DependentUpon>
     </Compile>
     <Compile Include="sysdiagrams.cs">
-      <DependentUpon>PraktikaDB.tt</DependentUpon>
+      <DependentUpon>PractikaDB.tt</DependentUpon>
     </Compile>
     <Compile Include="user2.cs">
-      <DependentUpon>PraktikaDB.tt</DependentUpon>
+      <DependentUpon>PractikaDB.tt</DependentUpon>
     </Compile>
     <Compile Include="users.cs">
-      <DependentUpon>PraktikaDB.tt</DependentUpon>
+      <DependentUpon>PractikaDB.tt</DependentUpon>
     </Compile>
     <Page Include="DopPages\CategoryEditPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DopPages\OrderEditPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LogInWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -134,17 +157,21 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\ReportPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PraktikaDB.Context.cs">
+    <Compile Include="PractikaDB.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>PraktikaDB.Context.tt</DependentUpon>
+      <DependentUpon>PractikaDB.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="PraktikaDB.Designer.cs">
+    <Compile Include="PractikaDB.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>PraktikaDB.edmx</DependentUpon>
+      <DependentUpon>PractikaDB.edmx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -163,13 +190,13 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EntityDeploy Include="PraktikaDB.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>PraktikaDB.Designer.cs</LastGenOutput>
-    </EntityDeploy>
     <None Include="packages.config" />
-    <None Include="PraktikaDB.edmx.diagram">
-      <DependentUpon>PraktikaDB.edmx</DependentUpon>
+    <EntityDeploy Include="PractikaDB.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>PractikaDB.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="PractikaDB.edmx.diagram">
+      <DependentUpon>PractikaDB.edmx</DependentUpon>
     </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -180,19 +207,19 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="PraktikaDB.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>PraktikaDB.Context.cs</LastGenOutput>
-      <DependentUpon>PraktikaDB.edmx</DependentUpon>
-    </Content>
-    <Content Include="PraktikaDB.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>PraktikaDB.edmx</DependentUpon>
-      <LastGenOutput>PraktikaDB.cs</LastGenOutput>
-    </Content>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+    <Content Include="PractikaDB.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>PractikaDB.edmx</DependentUpon>
+      <LastGenOutput>PractikaDB.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="PractikaDB.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>PractikaDB.edmx</DependentUpon>
+      <LastGenOutput>PractikaDB.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

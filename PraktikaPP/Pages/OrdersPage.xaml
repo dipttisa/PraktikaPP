@@ -18,9 +18,9 @@
             <TextBlock Text="по " VerticalAlignment="Center"/>
             <DatePicker x:Name="EndDatePicker" Width="120" Margin="5,0,10,0"/>
             <TextBlock Text="Категория:" VerticalAlignment="Center" Margin="10,0,5,0"/>
-            <ComboBox x:Name="CategoryComboBox" Width="120" />
-            <Button Content="Выбрать" Width="80" Margin="5,0,5,0" Click="FilterOrders_Click"/>
-            <Button Content="Очистить" Width="80" Click="ClearOrders_Click"/>
+            <ComboBox x:Name="CategoryComboBox" Width="120"  SelectedValuePath="id"  DisplayMemberPath="category_name"  SelectionChanged="CategoryFilterComboBox_SelectionChanged"/>
+            <Button Content="Поиск" Width="80" Margin="10,0,0,0" Click="PoickOrders_Click"/>
+            <Button Content="Очистить" Width="80" Margin="10,0,0,0" Click="ClearOrders_Click"/>
             <Button Content="Отчет" Width="80" Margin="5,0,0,0" Click="GenerateReport_Click"/>
         </StackPanel>
 

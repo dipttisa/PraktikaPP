@@ -7,14 +7,14 @@
         mc:Ignorable="d"
        Title="Главное меню" Height="450" Width="900" Background="LavenderBlush">
     <DockPanel>
-        <!-- Верхнее меню -->
+        
         <Menu Background="Lavender" DockPanel.Dock="Top">
             <MenuItem Header="Категории" Click="Categories_Click"/>
             <MenuItem Header="Продукция" Click="Products_Click"/>
                 <MenuItem Header="Платежи" Click="Order_Click"/>
-                <MenuItem Header="Отчет" Click="Report_Click"/>
+               
         </Menu>
-        <!-- Основное содержимое -->
+      
         <Frame Name="MainFrame" NavigationUIVisibility="Hidden" />
     </DockPanel>
 </Window>

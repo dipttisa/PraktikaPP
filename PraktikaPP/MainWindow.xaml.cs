@@ -52,7 +52,7 @@ namespace PraktikaPP
 
         private void Report_Click(object sender, RoutedEventArgs e)
         {
-             MainFrame.Navigate(new ReportPage(_userId));
+             //MainFrame.Navigate(new ReportPage(_userId));
         }
     }
 }

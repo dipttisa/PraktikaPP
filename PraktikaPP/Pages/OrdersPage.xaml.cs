@@ -54,12 +54,12 @@ namespace PraktikaPP.Pages
 
         private void AddOrder_Click(object sender, RoutedEventArgs e)
         {
-            int newOrderId = GenerateNewOrderId();
+            
 
             // Создаем новый объект заказа с автоматически сгенерированным ID
             var newOrder = new order
             {
-                id = newOrderId,
+                id = 0,
                 product_id = 0, // Установите ID продукта по умолчанию
                 count = 0, // Установите количество по умолчанию
                 user_id = _userId, // Устанавливаем ID текущего пользователя
@@ -67,28 +67,12 @@ namespace PraktikaPP.Pages
                 sum = 0, // Установите сумму по умолчанию
                 price = 0
             };
+            _context.order.Add(newOrder);
 
-            var selectedProduct = _context.prodact.Find(newOrder.product_id);
-            if (selectedProduct != null)
-            {
-                // Если продукт найден, устанавливаем цену из заказа
-                var existingOrder = _context.order.FirstOrDefault(o => o.product_id == newOrder.product_id);
-                if (existingOrder != null)
-                {
-                    newOrder.price = existingOrder.price; // Устанавливаем цену из существующего заказа
-                }
-                else
-                {
-                    MessageBox.Show("Цена для выбранного продукта не найдена в заказах!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
-            else
-            {
-                MessageBox.Show("Выбранный продукт не найден в базе данных!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+           
 
             // Переходим на страницу редактирования продукта
-            NavigationService.Navigate(new OrderEditPage(newOrder, OnOrderUpdated));
+            NavigationService.Navigate(new OrderEditPage(newOrder, _userId));
         }
 
         public void OnOrderUpdated()
@@ -101,18 +85,6 @@ namespace PraktikaPP.Pages
         {
             var orders = _context.order.Where(o => o.user_id == _userId).ToList();
             OrdersGrid.ItemsSource = orders; // Перезагружаем источник данных для Grid
-        }
-
-        private void RemoveOrder_Click(object sender, RoutedEventArgs e)
-        {
-            // Логика для удаления заказа
-        }
-
-        private int GenerateNewOrderId()
-        {
-            // Генерируем ID на основе максимального значения из базы данных
-            var maxOrderId = _context.order.Max(c => c.id);
-            return maxOrderId + 1;
         }
 
         private void ClearOrders_Click(object sender, RoutedEventArgs e)

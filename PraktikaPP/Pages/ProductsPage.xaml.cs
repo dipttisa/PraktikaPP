@@ -1,6 +1,7 @@
 ﻿using PraktikaPP.DopPages;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
 using System.Text;
@@ -22,9 +23,18 @@ namespace PraktikaPP.Pages
     /// </summary>
     public partial class ProductsPage : Page
     {
+        private ObservableCollection<prodact> Product { get; set; }
+        private PractikaDB _context;
+       
+
         public ProductsPage()
         {
+            
             InitializeComponent();
+            Product = new ObservableCollection<prodact>();
+
+            // Затем привязываем к ListView
+            ProductsListView.ItemsSource = Product;
             LoadCategories();
             LoadProducts();
         }
@@ -38,63 +48,59 @@ namespace PraktikaPP.Pages
             CategoryFilterComboBox.SelectedIndex = 0;
         }
 
-        // Загружаем продукты и связанные категории
         private void LoadProducts()
         {
-            // Загрузка продуктов и связанных категорий через Include
-            var products = PractikaDB.GetContext().prodact
-                .Include(p => p.categ) // Подключаем категорию для каждого продукта
-                .ToList();
+            try
+            {
+                // Загрузка продуктов и связанных категорий через Include
+                var products = PractikaDB.GetContext().prodact
+                    .Include(p => p.categ) // Подключаем категорию для каждого продукта
+                    .ToList();
 
-            // Привязываем данные продуктов к ListView
-            ProductsListView.ItemsSource = products;
+                // Привязываем данные продуктов к ListView
+                ProductsListView.ItemsSource = products;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка загрузки продуктов: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         // Обработчик для добавления нового продукта
         private void AddProduct_Click(object sender, RoutedEventArgs e)
         {
-            // Генерируем новый ID
-            int newProductId = GenerateNewProductId();
+            // Генерируем новый ID для продукта
+           
 
             // Создаем новый объект продукта с автоматически сгенерированным ID
             var newProduct = new prodact
             {
-                id = newProductId,
-                name_prod = string.Empty, // Установите значения по умолчанию или пустые
-                id_cat = 1 // Установите категорию по умолчанию или пустую
+                id = 0,
+                name_prod = string.Empty, // Устанавливаем название по умолчанию (пустое)
+                id_cat = 1 // Устанавливаем категорию по умолчанию (например, 1)
             };
 
             // Переходим на страницу редактирования продукта
-            NavigationService.Navigate(new ProductEditPage(newProduct));
-        
+            NavigationService.Navigate(new ProductEditPage(newProduct, OnProductUpdated));
         }
 
-
-        private int GenerateNewProductId()
-        {
-            // Получаем максимальный ID из существующих продуктов
-            var maxId = PractikaDB.GetContext().prodact.Max(p => (int?)p.id) ?? 0;
-
-            // Увеличиваем его на 1
-            return maxId + 1;
-        }
-
-
-
-        // Обработчик для редактирования выбранного продукта
+        // Редактирование выбранного продукта
         private void EditProduct_Click(object sender, RoutedEventArgs e)
         {
+            // Получаем выбранный продукт из списка
             var selectedProduct = ProductsListView.SelectedItem as prodact;
             if (selectedProduct != null)
             {
-                var product = new prodact { id = selectedProduct.id };  // Создаем новый объект продукта с нужным id
-                NavigationService.Navigate(new ProductEditPage(product));
+                // Переходим на страницу редактирования продукта
+                NavigationService.Navigate(new ProductEditPage(selectedProduct, OnProductUpdated));
             }
             else
             {
+                // Если продукт не выбран, выводим сообщение об ошибке
                 MessageBox.Show("Выберите продукт для редактирования.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+       
 
         // Обработчик изменения фильтра по категориям
         private void CategoryFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -144,6 +150,11 @@ namespace PraktikaPP.Pages
                 MessageBox.Show($"Ошибка загрузки данных: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+        private void OnProductUpdated()
+        {
+            LoadProducts();
+        }
+
     }
 
 }

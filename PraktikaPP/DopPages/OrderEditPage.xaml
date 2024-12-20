@@ -17,6 +17,7 @@
 
 
         <Button Content="Сохранить" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="30" Margin="150,150,0,0" Click="SaveProduct_Click" Grid.Row="1"/>
+        <Button Content="Отмена" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="30" Margin="255,150,0,0" Click="CancelButton_Click" Grid.Row="1"/>
         <Label Content="Название продукта" HorizontalAlignment="Left" Margin="10,75,0,0" VerticalAlignment="Top" Grid.RowSpan="2"/>
         <Label Content="Количество" HorizontalAlignment="Left" Margin="31,39,0,0" VerticalAlignment="Top" Grid.Row="1"/>
         <Label Content="Цена" HorizontalAlignment="Left" Margin="49,75,0,0" VerticalAlignment="Top" Grid.Row="1"/>
@@ -24,9 +25,9 @@
         <Label Content="р." HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="260,70,0,0" Grid.Row="1"/>
         <Label Content="р." HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="260,106,0,0" Grid.Row="1"/>
         <Label Content="Категория" HorizontalAlignment="Left" Margin="35,27,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="KolvotNameTextBox" HorizontalAlignment="Left" TextAlignment="Center" TextChanged="KolvotNameTextBox_TextChanged" Margin="140,39,0,0" Height="25" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120" Grid.Row="1"/>
-        <TextBox x:Name="SumNameTextBox" HorizontalAlignment="Center" TextAlignment="Center" IsReadOnly="True" Margin="0,106,0,0" Height="25" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="120" Grid.Row="1"/>
-        <TextBox x:Name="PriceTextBox" Width="120" Height="25" Margin="0,75,0,0" Text="Введите цену" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <TextBox x:Name="KolvotNameTextBox"  HorizontalAlignment="Left" TextAlignment="Center"  Margin="140,39,0,0" Height="25" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120" Grid.Row="1"/>
+        <TextBox x:Name="SumNameTextBox"  HorizontalAlignment="Center" TextAlignment="Center" IsReadOnly="True" Margin="0,106,0,0" Height="25" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="120" Grid.Row="1"/>
+        <TextBox x:Name="PriceTextBox"  Width="120" Height="25" Margin="0,75,0,0" Text="Введите цену" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top"/>
 
     </Grid>
 

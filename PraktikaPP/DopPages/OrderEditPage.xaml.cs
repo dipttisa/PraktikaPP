@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,31 +10,41 @@ namespace PraktikaPP.DopPages
 {
     public partial class OrderEditPage : Page
     {
-        private order _currentOrder; // Текущий заказ для редактирования или добавления
-        private Action _onOrderUpdated; // Колбэк для обновления данных в OrdersPage
+        private int _userId; // ID текущего пользователя
+        private order _order; // Текущий заказ для редактирования или добавления
         private PractikaDB _context;
 
-        public OrderEditPage(order order, Action onOrderUpdated)
+        public OrderEditPage(order selectedOrder = null, int userId = 0)
         {
             InitializeComponent();
-            _context = PractikaDB.GetContext();
-            _currentOrder = order;
-            _onOrderUpdated = onOrderUpdated;
 
-            // Загружаем данные в ComboBox
-            LoadCategories();
-
-            // Устанавливаем начальные значения для полей
-            if (_currentOrder.product_id > 0)
+            // Проверяем, передан ли ID пользователя
+            if (userId == 0)
             {
-                ProductComboBox.SelectedValue = _currentOrder.product_id;
+                MessageBox.Show("Ошибка: ID пользователя не передан!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                NavigationService.GoBack();
+                return;
             }
 
+            _userId = userId; // Сохраняем ID пользователя
+
+            // Если selectedOrder == null, создаем новый объект
+            _order = selectedOrder ?? new order();
+
+            // Устанавливаем ID авторизованного пользователя
+            _order.user_id = userId;
+            _context = PractikaDB.GetContext();
+
+            LoadCategories();
+            LoadProducts();
+
             // Устанавливаем начальное значение для цены
-            PriceTextBox.Text = _currentOrder.price.ToString();
+            PriceTextBox.Text = _order.price.ToString();
 
             // Подписываемся на событие изменения выбранной категории
             CategoryComboBox.SelectionChanged += CategoryComboBox_SelectionChanged;
+
+            LoadOrderData();
         }
 
         private void LoadProducts()
@@ -74,12 +85,12 @@ namespace PraktikaPP.DopPages
             }
         }
 
-        private void KolvotNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void KolvotNameTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
             CalculateTotal();
         }
 
-        private void PriceTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void PriceTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
             CalculateTotal();
         }
@@ -117,9 +128,10 @@ namespace PraktikaPP.DopPages
                 return;
             }
 
-            if (!int.TryParse(KolvotNameTextBox.Text, out int quantity))
+            if (!int.TryParse(KolvotNameTextBox.Text, out int quantity) || quantity <= 0)
             {
-                
+                MessageBox.Show("Количество должно быть положительным числом!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
             }
 
             if (!decimal.TryParse(PriceTextBox.Text, out decimal price) || price <= 0)
@@ -129,33 +141,50 @@ namespace PraktikaPP.DopPages
             }
 
             // Обновляем текущий заказ с новыми значениями
-            _currentOrder.product_id = (int)ProductComboBox.SelectedValue;
-            _currentOrder.count = quantity;
-            _currentOrder.price = price;  // Цена берется из текстового поля
-            _currentOrder.sum = price * quantity; // Сумма вычисляется на основе цены и количества
-            _currentOrder.date = DateTime.Now; // Обновляем дату
+            _order.product_id = (int)ProductComboBox.SelectedValue;
+            _order.count = quantity;
+            _order.price = price;  // Цена берется из текстового поля
+            _order.sum = price * quantity; // Сумма вычисляется на основе цены и количества
+            _order.date = DateTime.Now; // Обновляем дату
+            _order.user_id = _userId; // Устанавливаем ID авторизованного пользователя
 
             try
             {
                 // Если заказ новый, добавляем его в базу данных
-                if (_currentOrder.id == 0)
+                if (_order.id == 0)
                 {
-                    _currentOrder.id = GenerateNewOrderId(); // Генерируем новый ID
-                    _context.order.Add(_currentOrder); // Добавляем новый заказ в базу
+                    // Генерируем новый ID
+                    int maxId = GetMaxOrderId();
+                    _order.id = maxId + 1;
+
+                    // Добавляем новый заказ в базу
+                    _context.order.Add(_order);
+                    _context.SaveChanges();
                 }
                 else
                 {
                     // Если заказ существует, обновляем его
-                    _context.Entry(_currentOrder).State = EntityState.Modified;
+                    var existingOrder = _context.order.Find(_order.id);
+                    if (existingOrder != null)
+                    {
+                        existingOrder.product_id = _order.product_id;
+                        existingOrder.count = _order.count;
+                        existingOrder.price = _order.price;
+                        existingOrder.sum = _order.sum;
+                        existingOrder.date = _order.date;
+                        existingOrder.user_id = _order.user_id;
+                    }
+                    
                 }
 
                 // Сохраняем изменения в базе данных
+               
+
+                // Выводим сообщение об успешном сохранении
+                MessageBox.Show("Заказ успешно сохранен!", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
                 _context.SaveChanges();
 
-                // Вызываем колбэк для обновления данных на странице заказов
-                _onOrderUpdated?.Invoke();
-
-                // Возвращаемся на страницу заказов
+                // Возвращаемся на предыдущую страницу
                 NavigationService.GoBack();
             }
             catch (DbUpdateConcurrencyException ex)
@@ -171,28 +200,26 @@ namespace PraktikaPP.DopPages
 
                     if (result == MessageBoxResult.Yes)
                     {
-                        
+                        // Создаем новый заказ
                         var newOrder = new order
                         {
-                            product_id = _currentOrder.product_id,
-                            count = _currentOrder.count,
-                            price = _currentOrder.price,
-                            sum = _currentOrder.sum,
+                            product_id = _order.product_id,
+                            count = _order.count,
+                            price = _order.price,
+                            sum = _order.sum,
                             date = DateTime.Now,
-                            user_id = _currentOrder.user_id 
+                            user_id = _order.user_id
                         };
 
-                        
-                        newOrder.id = GenerateNewOrderId();
+                        // Генерируем новый ID
+                        int maxId = GetMaxOrderId();
+                        newOrder.id = maxId + 1;
 
-                        
+                        // Добавляем новый заказ в базу
                         _context.order.Add(newOrder);
-                        
+                        _context.SaveChanges();
 
-                       
-                        _onOrderUpdated?.Invoke();
-
-                        
+                        // Возвращаемся на предыдущую страницу
                         NavigationService.GoBack();
                     }
                 }
@@ -207,14 +234,39 @@ namespace PraktikaPP.DopPages
             }
         }
 
-
-
-
-
-
-        private int GenerateNewOrderId()
+        // Метод для заполнения полей данными из выбранного заказа
+        private void LoadOrderData()
         {
-            // Генерируем ID на основе максимального значения из базы данных
+            ProductComboBox.Text = _order.product_id.ToString();
+            PriceTextBox.Text = _order.price.ToString();
+            KolvotNameTextBox.Text = _order.count.ToString();
+            SumNameTextBox.Text = _order.sum.ToString();
+
+            // Заполняем имя продукта, если product_id уже заполнен
+            if (_order.product_id > 0)
+            {
+                _order.prodact.name_prod = GetProductNameById(_order.product_id);
+                ProductComboBox.Text = _order.prodact.name_prod;
+            }
+        }
+
+        // Обработчик нажатия кнопки "Отмена"
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Возвращаемся на предыдущую страницу
+            NavigationService.GoBack();
+        }
+
+        // Метод для получения имени продукта по product_id
+        private string GetProductNameById(int productId)
+        {
+            var product = _context.prodact.FirstOrDefault(p => p.id == productId);
+            return product?.name_prod ?? "Unknown Product";
+        }
+
+        
+        private int GetMaxOrderId()
+        {
             var maxOrderId = _context.order.Max(c => c.id);
             return maxOrderId + 1;
         }

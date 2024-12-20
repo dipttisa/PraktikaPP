@@ -12,7 +12,7 @@
         <!-- Header Buttons -->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,5,0,10">
             <Button Content="+" Width="30" Height="30" Margin="0,0,5,0" Click="AddOrder_Click"/>
-            <Button Content="-" Width="30" Height="30" Margin="0,0,5,0" Click="RemoveOrder_Click"/>
+            <Button Content="-" Width="30" Height="30" Margin="0,0,5,0" />
             <TextBlock Text="C " VerticalAlignment="Center" Margin="5,0,0,0"/>
             <DatePicker x:Name="StartDatePicker"  Width="120" Margin="5,0,5,0"/>
             <TextBlock Text="по " VerticalAlignment="Center"/>

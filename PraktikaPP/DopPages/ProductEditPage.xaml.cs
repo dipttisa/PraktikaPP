@@ -1,79 +1,97 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace PraktikaPP.DopPages
 {
-    /// <summary>
-    /// Логика взаимодействия для ProductEditPage.xaml
-    /// </summary>
     public partial class ProductEditPage : Page
     {
+        private readonly PractikaDB _context;
+        private readonly prodact _product;
+        private readonly Action _onProductUpdated;
 
-        private prodact _product;
-
-        public ProductEditPage()
+        public ProductEditPage(prodact product, Action onProductUpdated)
         {
             InitializeComponent();
-            LoadCategories();
-        }
 
-        public ProductEditPage(prodact product) : this()
-        {
-            _product = product;
-            ProductNameTextBox.Text = product.name_prod;
-            CategoryComboBox.SelectedValue = product.id_cat;
-        }
+            _context = PractikaDB.GetContext();
+            _onProductUpdated = onProductUpdated;
 
-        private void LoadCategories()
-        {
-            var categories = PractikaDB.GetContext().categ.ToList();
+            // Загружаем категории в ComboBox
+            var categories = _context.categ.ToList();
+            categories.Insert(0, new categ
+            {
+                id = 0,
+                category_name = "Все категории"
+            });
             CategoryComboBox.ItemsSource = categories;
-            CategoryComboBox.SelectedIndex = 0;
+            CategoryComboBox.DisplayMemberPath = "category_name";
+            CategoryComboBox.SelectedValuePath = "id";
+
+            // Инициализируем продукт
+            _product = product ?? new prodact();
+            ProductNameTextBox.Text = _product.name_prod;
+            CategoryComboBox.SelectedValue = _product.id_cat;
         }
 
         private void SaveProduct_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(ProductNameTextBox.Text))
+            if (string.IsNullOrWhiteSpace(ProductNameTextBox.Text) ||CategoryComboBox.SelectedValue == null|| CategoryComboBox.SelectedValue.ToString() == "0")
             {
-                MessageBox.Show("Пожалуйста, заполните все поля.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Заполните все поля!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            prodact product = _product ?? new prodact();
+            // Заполняем данные продукта из формы
+            _product.name_prod = ProductNameTextBox.Text.Trim();
 
-            product.name_prod = ProductNameTextBox.Text;
-            product.id_cat = (int)CategoryComboBox.SelectedValue;
-
-            // Если это новый продукт, не устанавливаем id вручную. Оно сгенерируется автоматически.
-            if (_product != null)
+            // Присваиваем значение category_id
+            if (CategoryComboBox.SelectedValue is int selectedCategoryId)
             {
-                // Не нужно вручную назначать id. Это произойдет автоматически при сохранении.
-                PractikaDB.GetContext().prodact.Add(product);
-               
+                _product.id_cat = selectedCategoryId; // Теперь category_id имеет тип int
             }
             else
             {
-                // Если редактируем существующий продукт, просто сохраняем изменения
-                PractikaDB.GetContext().Entry(product).State = System.Data.Entity.EntityState.Modified;
-                
+                // Обработка ошибки, если SelectedValue не является int
+                MessageBox.Show("Выбранная категория имеет недопустимый тип.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
             }
-                PractikaDB.GetContext().SaveChanges();
-            NavigationService.GoBack();
 
+            try
+            {
+                // Если это новый продукт (id == 0), вычисляем новый ID
+                if (_product.id == 0)
+                {
+                    int maxId = _context.prodact.Any() ? _context.prodact.Max(p => p.id) : 0;
+                    _product.id = maxId + 1;
+                    _context.prodact.Add(_product);
+                }
+                else
+                {
+                    // Если это существующий продукт, обновляем его данные
+                    var existingProduct = _context.prodact.Find(_product.id);
+                    if (existingProduct != null)
+                    {
+                        existingProduct.name_prod = _product.name_prod;
+                        existingProduct.id_cat = _product.id_cat;
+                    }
+                }
 
+                // Сохраняем изменения в базе данных
+                _context.SaveChanges();
+
+                // Выводим сообщение об успешном сохранении
+                MessageBox.Show("Продукт успешно сохранен!", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                // Возвращаемся на предыдущую страницу
+                NavigationService.GoBack();
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show("Произошла ошибка: " + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        
         }
     }
 }
-

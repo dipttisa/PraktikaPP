@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace PraktikaPP
 {
@@ -27,12 +28,19 @@ namespace PraktikaPP
         private int _attemptsLeft = 3;
         private bool _isBlocked = false;
         private bool _captchaShown = false; // Флаг для отслеживания отображения CAPTCHA
+        private DispatcherTimer _blockTimer; // Таймер для блокировки
+        private int _secondsLeft; // Количество оставшихся секунд блокировки
 
         public LogInWindow()
         {
             InitializeComponent();
             _context = new PractikaDB();
-           LoadUsers();
+            LoadUsers();
+
+            // Инициализация таймера
+            _blockTimer = new DispatcherTimer();
+            _blockTimer.Interval = TimeSpan.FromSeconds(1);
+            _blockTimer.Tick += BlockTimer_Tick;
         }
 
         private void LoadUsers()
@@ -59,7 +67,7 @@ namespace PraktikaPP
         {
             if (_isBlocked)
             {
-                MessageBox.Show("Окно авторизации заблокировано на 30 секунд.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Окно авторизации заблокировано. Осталось {_secondsLeft} секунд.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -94,12 +102,9 @@ namespace PraktikaPP
                 if (_attemptsLeft == 0)
                 {
                     _isBlocked = true;
-                    MessageBox.Show("Окно авторизации заблокировано на 30 секунд.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                    Thread.Sleep(30000); // Блокировка на 30 секунд
-                    _attemptsLeft = 3;
-                    _isBlocked = false;
-                    HideCaptcha(); // Скрываем CAPTCHA после разблокировки
-                    _captchaShown = false; // Сбрасываем флаг
+                    _secondsLeft = 30;
+                    _blockTimer.Start(); // Запускаем таймер
+                    MessageBox.Show($"Окно авторизации заблокировано на 30 секунд.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 else
                 {
@@ -140,6 +145,24 @@ namespace PraktikaPP
             CaptchaTextBox.Visibility = Visibility.Collapsed;
             CaptchaTextBlock.Visibility = Visibility.Collapsed;
             RefreshCaptchaButton.Visibility = Visibility.Collapsed;
+        }
+
+        private void BlockTimer_Tick(object sender, EventArgs e)
+        {
+            _secondsLeft--;
+
+            if (_secondsLeft <= 0)
+            {
+                _blockTimer.Stop(); // Останавливаем таймер
+                _isBlocked = false;
+                _attemptsLeft = 3; // Сбрасываем количество попыток
+                HideCaptcha(); // Скрываем CAPTCHA после разблокировки
+                _captchaShown = false; // Сбрасываем флаг
+            }
+            else
+            {
+                MessageBox.Show($"Окно авторизации заблокировано. Осталось {_secondsLeft} секунд.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }
